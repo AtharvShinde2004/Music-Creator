@@ -1,71 +1,74 @@
 // script.js
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const tempoInput = document.getElementById("tempo");
-const instrumentSelect = document.getElementById("instrument");
+
+const instruments = [
+  { name: "Kick", sound: "kick.wav" },
+  { name: "Snare", sound: "snare.wav" },
+  { name: "Hi-Hat", sound: "hihat.wav" },
+  { name: "Clap", sound: "clap.wav" },
+  { name: "Bass", sound: "bass.wav" }
+];
+
+const controlsContainer = document.getElementById("controls");
 const beatGrid = document.getElementById("beatGrid");
 
-// Create beat grid (16 beats, 4 rows for each instrument)
-for (let i = 0; i < 64; i++) {
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  beatGrid.appendChild(checkbox);
-}
+// Function to initialize instrument controls and grid
+function initialize() {
+  instruments.forEach((instrument) => {
+    const label = document.createElement("label");
+    label.innerText = instrument.name;
 
-// Function to play sound
-function playSound(frequency, time, duration) {
-  const osc = audioContext.createOscillator();
-  const gain = audioContext.createGain();
-  osc.connect(gain);
-  gain.connect(audioContext.destination);
+    const checkboxGrid = document.createElement("div");
+    checkboxGrid.classList.add("checkbox-grid");
 
-  osc.frequency.value = frequency;
-  osc.type = "sine";
-  gain.gain.setValueAtTime(0.5, time);
-  gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
-
-  osc.start(time);
-  osc.stop(time + duration);
-}
-
-// Map instruments to frequencies
-const instrumentFrequencies = {
-  kick: 150,
-  snare: 300,
-  hiHat: 600,
-  synth: 800
-};
-
-// Function to play beat
-function playBeat() {
-  const tempo = parseInt(tempoInput.value);
-  const beatDuration = 60 / tempo / 4;
-  const checkboxes = Array.from(beatGrid.children);
-
-  checkboxes.forEach((checkbox, index) => {
-    if (checkbox.checked) {
-      const instrument = instrumentSelect.value;
-      const frequency = instrumentFrequencies[instrument];
-      const time = audioContext.currentTime + (index % 16) * beatDuration;
-      playSound(frequency, time, beatDuration * 0.9);
+    for (let i = 0; i < 16; i++) {
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.dataset.instrument = instrument.name;
+      checkbox.dataset.index = i;
+      checkboxGrid.appendChild(checkbox);
     }
+
+    controlsContainer.appendChild(label);
+    beatGrid.appendChild(checkboxGrid);
   });
+
+  // Add playback control buttons
+  const playButton = document.createElement("button");
+  playButton.innerText = "Play";
+  playButton.onclick = playBeat;
+  controlsContainer.appendChild(playButton);
+
+  const stopButton = document.createElement("button");
+  stopButton.innerText = "Stop";
+  stopButton.onclick = stopBeat;
+  controlsContainer.appendChild(stopButton);
 }
 
-// Function to save beat
-function saveBeat() {
-  const beatPattern = Array.from(beatGrid.children).map(checkbox => checkbox.checked);
-  localStorage.setItem("savedBeat", JSON.stringify(beatPattern));
-  alert("Beat saved!");
+// Function to play the beat based on grid state
+function playBeat() {
+  const beatInterval = setInterval(() => {
+    for (let i = 0; i < 16; i++) {
+      instruments.forEach((instrument) => {
+        const checkboxes = document.querySelectorAll(`input[data-instrument="${instrument.name}"][data-index="${i}"]`);
+        checkboxes.forEach((checkbox) => {
+          if (checkbox.checked) {
+            playSound(instrument.sound);
+          }
+        });
+      });
+    }
+  }, 250); // Set tempo by adjusting interval time (e.g., 250ms for 240 BPM)
 }
 
-// Function to load saved beat
-function loadBeat() {
-  const savedBeat = JSON.parse(localStorage.getItem("savedBeat"));
-  if (savedBeat) {
-    Array.from(beatGrid.children).forEach((checkbox, index) => {
-      checkbox.checked = savedBeat[index];
-    });
-  }
+// Function to play sound for each instrument
+function playSound(soundFile) {
+  const audio = new Audio(`sounds/${soundFile}`);
+  audio.play();
 }
 
-window.onload = loadBeat;
+function stopBeat() {
+  clearInterval(beatInterval);
+}
+
+// Initialize the site on load
+initialize();
