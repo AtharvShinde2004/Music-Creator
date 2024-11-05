@@ -1,28 +1,87 @@
 /* styles.css */
+
+/* Reset some default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  background-color: #1e1e2f;
+  color: #f1f1f1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
 }
 
+/* Header Styling */
 header {
   text-align: center;
   margin-top: 20px;
+  padding: 20px;
+  background-color: #28293d;
+  width: 100%;
 }
 
+header h1 {
+  font-size: 2.5rem;
+  color: #ff7a59;
+}
+
+header p {
+  font-size: 1.2rem;
+  color: #bfbfbf;
+}
+
+/* Main Content */
 main {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 20px;
 }
 
+/* Control Panel Styling */
 #controls {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 15px;
+  background-color: #33334d;
+  border-radius: 8px;
 }
 
+#controls label {
+  font-size: 1rem;
+  color: #cfcfcf;
+}
+
+#controls select,
+#controls input,
+#controls button {
+  font-size: 1rem;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  background-color: #46466a;
+  color: #f1f1f1;
+  transition: background-color 0.3s ease;
+}
+
+#controls button:hover {
+  background-color: #ff7a59;
+}
+
+/* Beat Grid Styling */
 #beatGrid {
   display: grid;
   grid-template-columns: repeat(16, 1fr);
@@ -30,10 +89,34 @@ main {
 }
 
 #beatGrid input {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  background-color: #3b3b5b;
+  border: 1px solid #2c2c44;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
+#beatGrid input:checked {
+  background-color: #ff7a59;
+}
+
+/* Footer Styling */
 footer {
   margin-top: 20px;
+  padding: 10px;
+  background-color: #28293d;
+  width: 100%;
+  text-align: center;
+  color: #bfbfbf;
+}
+
+footer p {
+  font-size: 0.9rem;
+}
+
+/* Button Animation */
+#controls button:active {
+  transform: scale(0.95);
 }
