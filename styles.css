@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* Reset some default browser styles */
+/* Global reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -15,9 +15,10 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  padding: 20px;
 }
 
-/* Header Styling */
+/* Header styling */
 header {
   text-align: center;
   margin-top: 20px;
@@ -39,7 +40,7 @@ header p {
 /* Main Content */
 main {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -47,7 +48,7 @@ main {
   gap: 20px;
 }
 
-/* Control Panel Styling */
+/* Responsive Control Panel */
 #controls {
   display: flex;
   flex-wrap: wrap;
@@ -81,16 +82,17 @@ main {
   background-color: #ff7a59;
 }
 
-/* Beat Grid Styling */
+/* Responsive Beat Grid */
 #beatGrid {
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   gap: 5px;
+  width: 100%;
 }
 
 #beatGrid input {
-  width: 25px;
-  height: 25px;
+  width: 100%;
+  aspect-ratio: 1;
   cursor: pointer;
   background-color: #3b3b5b;
   border: 1px solid #2c2c44;
@@ -102,7 +104,7 @@ main {
   background-color: #ff7a59;
 }
 
-/* Footer Styling */
+/* Footer styling */
 footer {
   margin-top: 20px;
   padding: 10px;
@@ -116,7 +118,18 @@ footer p {
   font-size: 0.9rem;
 }
 
-/* Button Animation */
+/* Button animation */
 #controls button:active {
   transform: scale(0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
+  #beatGrid {
+    grid-template-columns: repeat(8, 1fr); /* Stack into 8 columns on small screens */
+  }
 }
