@@ -1,74 +1,69 @@
-// script.js
+// Instruments setup with Tone.js
+const instruments = {
+  Kick: new Tone.MembraneSynth().toDestination(),
+  Snare: new Tone.NoiseSynth({ volume: -10 }).toDestination(),
+  HiHat: new Tone.MetalSynth({ volume: -15 }).toDestination(),
+  Clap: new Tone.MembraneSynth({ volume: -5 }).toDestination(),
+  Bass: new Tone.FMSynth({ volume: -8 }).toDestination(),
+};
 
-const instruments = [
-  { name: "Kick", sound: "kick.wav" },
-  { name: "Snare", sound: "snare.wav" },
-  { name: "Hi-Hat", sound: "hihat.wav" },
-  { name: "Clap", sound: "clap.wav" },
-  { name: "Bass", sound: "bass.wav" }
-];
+// Tempo for the beat
+const bpm = 120;
+Tone.Transport.bpm.value = bpm;
+Tone.Transport.loop = true;
+Tone.Transport.loopEnd = '1m';
 
-const controlsContainer = document.getElementById("controls");
-const beatGrid = document.getElementById("beatGrid");
+let currentStep = 0;
 
-// Function to initialize instrument controls and grid
+// Initialize beat grid and control panel
 function initialize() {
-  instruments.forEach((instrument) => {
-    const label = document.createElement("label");
-    label.innerText = instrument.name;
+  const controlsContainer = document.getElementById("controls");
+  const beatGrid = document.getElementById("beatGrid");
 
-    const checkboxGrid = document.createElement("div");
-    checkboxGrid.classList.add("checkbox-grid");
+  // Create instrument labels and buttons
+  Object.keys(instruments).forEach((instrument) => {
+    const label = document.createElement("label");
+    label.innerText = instrument;
+    controlsContainer.appendChild(label);
 
     for (let i = 0; i < 16; i++) {
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
-      checkbox.dataset.instrument = instrument.name;
-      checkbox.dataset.index = i;
-      checkboxGrid.appendChild(checkbox);
+      checkbox.className = "beat";
+      checkbox.dataset.instrument = instrument;
+      checkbox.dataset.step = i;
+      beatGrid.appendChild(checkbox);
     }
-
-    controlsContainer.appendChild(label);
-    beatGrid.appendChild(checkboxGrid);
   });
 
-  // Add playback control buttons
+  // Play and Stop buttons
   const playButton = document.createElement("button");
   playButton.innerText = "Play";
-  playButton.onclick = playBeat;
+  playButton.onclick = () => Tone.Transport.start();
   controlsContainer.appendChild(playButton);
 
   const stopButton = document.createElement("button");
   stopButton.innerText = "Stop";
-  stopButton.onclick = stopBeat;
+  stopButton.onclick = () => Tone.Transport.stop();
   controlsContainer.appendChild(stopButton);
+
+  // Schedule a repeat event
+  Tone.Transport.scheduleRepeat((time) => playStep(time), "16n");
 }
 
-// Function to play the beat based on grid state
-function playBeat() {
-  const beatInterval = setInterval(() => {
-    for (let i = 0; i < 16; i++) {
-      instruments.forEach((instrument) => {
-        const checkboxes = document.querySelectorAll(`input[data-instrument="${instrument.name}"][data-index="${i}"]`);
-        checkboxes.forEach((checkbox) => {
-          if (checkbox.checked) {
-            playSound(instrument.sound);
-          }
-        });
-      });
+// Play the current step and check each instrument's checkboxes
+function playStep(time) {
+  const step = currentStep % 16;
+  document.querySelectorAll(".beat").forEach((checkbox) => {
+    if (parseInt(checkbox.dataset.step) === step && checkbox.checked) {
+      const instrument = instruments[checkbox.dataset.instrument];
+      if (instrument.triggerAttack) {
+        instrument.triggerAttackRelease("C2", "8n", time);
+      }
     }
-  }, 250); // Set tempo by adjusting interval time (e.g., 250ms for 240 BPM)
+  });
+  currentStep++;
 }
 
-// Function to play sound for each instrument
-function playSound(soundFile) {
-  const audio = new Audio(`sounds/${soundFile}`);
-  audio.play();
-}
-
-function stopBeat() {
-  clearInterval(beatInterval);
-}
-
-// Initialize the site on load
+// Initialize the interface on page load
 initialize();
