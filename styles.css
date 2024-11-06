@@ -1,150 +1,39 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
-}
-
+/* styles.css */
 body {
-  background-color: #1e1e2f;
-  color: #f1f1f1;
+  font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  padding: 20px;
 }
 
 header {
   text-align: center;
-  padding: 20px;
-  background-color: #28293d;
-  width: 100%;
-}
-
-header h1 {
-  font-size: 2.5rem;
-  color: #ff7a59;
-}
-
-header p {
-  font-size: 1.2rem;
-  color: #bfbfbf;
+  margin-top: 20px;
 }
 
 main {
-  width: 100%;
-  max-width: 800px;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-}
-
-#instrument-selector {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  background-color: #33334d;
-  border-radius: 8px;
-  width: 100%;
-}
-
-#instrument-selector label {
-  font-size: 1rem;
-  color: #cfcfcf;
-}
-
-#instrument-selector select, 
-#instrument-selector button {
-  font-size: 1rem;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #46466a;
-  color: #f1f1f1;
-  transition: background-color 0.3s ease;
-}
-
-#instrument-selector button:hover {
-  background-color: #ff7a59;
 }
 
 #controls {
   display: flex;
-  gap: 15px;
-  padding: 15px;
-  background-color: #33334d;
-  border-radius: 8px;
-}
-
-#controls button {
-  font-size: 1rem;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #46466a;
-  color: #f1f1f1;
-  transition: background-color 0.3s ease;
-}
-
-#controls button:hover {
-  background-color: #ff7a59;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 #beatGrid {
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   gap: 5px;
-  width: 100%;
 }
 
-.instrument-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.instrument-row label {
-  min-width: 50px;
-  font-size: 1rem;
-  color: #ff7a59;
-}
-
-.beat {
-  width: 100%;
-  aspect-ratio: 1;
-  cursor: pointer;
-  background-color: #3b3b5b;
-  border: 1px solid #2c2c44;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.beat:checked {
-  background-color: #ff7a59;
+#beatGrid input {
+  width: 20px;
+  height: 20px;
 }
 
 footer {
   margin-top: 20px;
-  padding: 10px;
-  background-color: #28293d;
-  width: 100%;
-  text-align: center;
-  color: #bfbfbf;
-}
-
-@media (max-width: 600px) {
-  header h1 {
-    font-size: 2rem;
-  }
-
-  #beatGrid {
-    grid-template-columns: repeat(8, 1fr);
-  }
 }
