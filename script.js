@@ -1,4 +1,4 @@
-// Define the instruments using Tone.js
+// Define available instruments using Tone.js
 const instruments = {
   Kick: new Tone.MembraneSynth().toDestination(),
   Snare: new Tone.NoiseSynth({ envelope: { sustain: 0.1 } }).toDestination(),
@@ -7,51 +7,54 @@ const instruments = {
   Bass: new Tone.FMSynth({ modulationIndex: 12, volume: -8 }).toDestination(),
 };
 
-// Set up the transport properties
+// State to track the added instruments and current step
+const addedInstruments = [];
+let currentStep = 0;
+
+// Set up Tone.js transport properties
 const bpm = 120;
 Tone.Transport.bpm.value = bpm;
 Tone.Transport.loop = true;
 Tone.Transport.loopEnd = '1m';
 
-let currentStep = 0;
+// Function to add an instrument row
+function addInstrument() {
+  const instrumentName = document.getElementById('instrument').value;
 
-// Function to initialize the beat grid and controls
-function initialize() {
-  const controlsContainer = document.getElementById("controls");
-  const beatGrid = document.getElementById("beatGrid");
+  // Prevent duplicate instrument addition
+  if (addedInstruments.includes(instrumentName)) {
+    alert(`${instrumentName} is already added.`);
+    return;
+  }
 
-  // Generate controls and beat grid for each instrument
-  Object.keys(instruments).forEach((instrument) => {
-    const label = document.createElement("label");
-    label.innerText = instrument;
-    controlsContainer.appendChild(label);
+  // Mark the instrument as added
+  addedInstruments.push(instrumentName);
 
-    for (let i = 0; i < 16; i++) {
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.className = "beat";
-      checkbox.dataset.instrument = instrument;
-      checkbox.dataset.step = i;
-      beatGrid.appendChild(checkbox);
-    }
-  });
+  // Create a new row for the instrument in the beat grid
+  const beatGrid = document.getElementById('beatGrid');
+  const row = document.createElement('div');
+  row.classList.add('instrument-row');
 
-  // Play and Stop buttons
-  const playButton = document.createElement("button");
-  playButton.innerText = "Play";
-  playButton.onclick = () => Tone.Transport.start();
-  controlsContainer.appendChild(playButton);
+  // Label for the instrument
+  const label = document.createElement('label');
+  label.innerText = instrumentName;
+  row.appendChild(label);
 
-  const stopButton = document.createElement("button");
-  stopButton.innerText = "Stop";
-  stopButton.onclick = () => Tone.Transport.stop();
-  controlsContainer.appendChild(stopButton);
+  // Create 16 checkboxes for the beats
+  for (let i = 0; i < 16; i++) {
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'beat';
+    checkbox.dataset.instrument = instrumentName;
+    checkbox.dataset.step = i;
+    row.appendChild(checkbox);
+  }
 
-  // Schedule the playStep function to trigger every sixteenth note
-  Tone.Transport.scheduleRepeat((time) => playStep(time), "16n");
+  // Append the row to the beat grid
+  beatGrid.appendChild(row);
 }
 
-// Play the current step, activating any instruments whose checkboxes are checked
+// Function to play the current step, activating any instruments whose checkboxes are checked
 function playStep(time) {
   const step = currentStep % 16;
 
@@ -67,5 +70,14 @@ function playStep(time) {
   currentStep++;
 }
 
-// Initialize the beat maker interface on page load
-initialize();
+// Initialize playback controls
+function initializeControls() {
+  document.getElementById("playButton").onclick = () => Tone.Transport.start();
+  document.getElementById("stopButton").onclick = () => Tone.Transport.stop();
+
+  // Schedule the playStep function to trigger every sixteenth note
+  Tone.Transport.scheduleRepeat((time) => playStep(time), "16n");
+}
+
+// Initialize controls on page load
+initializeControls();
