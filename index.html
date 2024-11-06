@@ -3,49 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Beat Maker</title>
+  <title>Simple Beat Maker</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Load Tone.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.26/Tone.min.js"></script>
 </head>
 <body>
 
-  <!-- Header -->
   <header>
     <h1>Beat Maker</h1>
-    <p>Create your own beats with various instruments</p>
+    <p>Click on the squares to create beats</p>
   </header>
 
-  <!-- Main Content -->
   <main>
-    <!-- Instrument Selection Dropdown -->
-    <section id="instrument-selector">
-      <label for="instrument">Choose an instrument:</label>
-      <select id="instrument">
-        <option value="Kick">Kick</option>
-        <option value="Snare">Snare</option>
-        <option value="HiHat">HiHat</option>
-        <option value="Clap">Clap</option>
-        <option value="Bass">Bass</option>
-      </select>
-      <button onclick="addInstrument()">Add Instrument</button>
-    </section>
+    <!-- Beat grid layout -->
+    <div id="beatGrid">
+      <div class="instrument" id="kick">
+        <h2>Kick</h2>
+        <div class="steps"></div>
+      </div>
+      <div class="instrument" id="snare">
+        <h2>Snare</h2>
+        <div class="steps"></div>
+      </div>
+      <div class="instrument" id="hihat">
+        <h2>HiHat</h2>
+        <div class="steps"></div>
+      </div>
+    </div>
 
-    <!-- Controls for Playback -->
-    <section id="controls">
+    <!-- Control buttons -->
+    <div id="controls">
       <button id="playButton">Play</button>
       <button id="stopButton">Stop</button>
-    </section>
-
-    <!-- Beat Grid -->
-    <section id="beatGrid">
-      <!-- Grid checkboxes for each instrument and beat position will be dynamically generated -->
-    </section>
+    </div>
   </main>
 
-  <!-- Footer -->
   <footer>
-    <p>Beat Maker &copy; 2024</p>
+    <p>Simple Beat Maker &copy; 2024</p>
   </footer>
 
   <!-- JavaScript -->
