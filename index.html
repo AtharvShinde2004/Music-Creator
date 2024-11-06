@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Maker</title>
+  <title>Enhanced Music Maker</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>Music Maker</h1>
-    <p>Create and play custom beats!</p>
+    <h1>🎶 Music Maker 🎶</h1>
+    <p>Craft your unique beats and rhythms!</p>
   </header>
 
   <main>
     <div id="controls">
-      <label for="instrument">Instrument:</label>
+      <label for="instrument">🎸 Instrument:</label>
       <select id="instrument">
         <option value="kick">Kick Drum</option>
         <option value="snare">Snare Drum</option>
@@ -22,20 +22,20 @@
         <option value="synth">Synth</option>
       </select>
 
-      <label for="tempo">Tempo:</label>
+      <label for="tempo">⏱ Tempo:</label>
       <input type="number" id="tempo" value="120" min="60" max="200">
 
-      <button onclick="playBeat()">Play Beat</button>
-      <button onclick="saveBeat()">Save Beat</button>
+      <button class="control-btn play" onclick="playBeat()">▶️ Play Beat</button>
+      <button class="control-btn save" onclick="saveBeat()">💾 Save Beat</button>
     </div>
 
-    <div id="beatGrid">
+    <div id="beatGrid" class="beat-grid">
       <!-- Dynamic grid of checkboxes for beat creation -->
     </div>
   </main>
 
   <footer>
-    <p>&copy; 2024 Music Maker - Create beats with code!</p>
+    <p>&copy; 2024 Music Maker - Create beats with style!</p>
   </footer>
 
   <script src="script.js"></script>
