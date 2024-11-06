@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beat Maker</title>
+  <title>Interactive Beat Maker</title>
   <link rel="stylesheet" href="styles.css">
   <!-- Load Tone.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.26/Tone.min.js"></script>
@@ -18,9 +18,23 @@
 
   <!-- Main Content -->
   <main>
-    <!-- Controls for Instruments -->
+    <!-- Instrument Selection Dropdown -->
+    <section id="instrument-selector">
+      <label for="instrument">Choose an instrument:</label>
+      <select id="instrument">
+        <option value="Kick">Kick</option>
+        <option value="Snare">Snare</option>
+        <option value="HiHat">HiHat</option>
+        <option value="Clap">Clap</option>
+        <option value="Bass">Bass</option>
+      </select>
+      <button onclick="addInstrument()">Add Instrument</button>
+    </section>
+
+    <!-- Controls for Playback -->
     <section id="controls">
-      <!-- Instrument controls will be dynamically inserted by JavaScript -->
+      <button id="playButton">Play</button>
+      <button id="stopButton">Stop</button>
     </section>
 
     <!-- Beat Grid -->
