@@ -1,4 +1,3 @@
-// script.js
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const tempoInput = document.getElementById("tempo");
 const instrumentSelect = document.getElementById("instrument");
@@ -75,5 +74,76 @@ function loadBeat() {
     });
   }
 }
+
+function clearBeats() {
+  Array.from(beatGrid.children).forEach(checkbox => {
+    checkbox.checked = false;
+  });
+}
+
+function saveAudio() {
+  const beatPattern = Array.from(beatGrid.children).map(checkbox => checkbox.checked);
+  const tempo = parseInt(tempoInput.value);
+  const beatDuration = 60 / tempo / 4;
+
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const offlineContext = new OfflineAudioContext(1, audioContext.sampleRate * beatPattern.length * beatDuration, audioContext.sampleRate);
+
+  // Schedule the sounds based on beat pattern
+  let currentTime = 0;
+  beatPattern.forEach((isSelected, index) => {
+    if (isSelected) {
+      const instrument = instrumentSelect.value;
+      const frequency = instrumentFrequencies[instrument];
+      
+      // Create and configure oscillator
+      const oscillator = offlineContext.createOscillator();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, currentTime);
+
+      const gainNode = offlineContext.createGain();
+      gainNode.gain.setValueAtTime(0.5, currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + beatDuration * 0.9);
+
+      oscillator.connect(gainNode);
+      gainNode.connect(offlineContext.destination);
+
+      oscillator.start(currentTime);
+      oscillator.stop(currentTime + beatDuration * 0.9);
+    }
+    currentTime += beatDuration;
+  });
+
+  // Render the audio
+  offlineContext.startRendering().then(renderedBuffer => {
+    // Convert to MP3 format using libmp3lame.js
+    const wavData = new Int16Array(renderedBuffer.length);
+    for (let i = 0; i < renderedBuffer.length; i++) {
+      wavData[i] = Math.max(-1, Math.min(1, renderedBuffer.getChannelData(0)[i])) * 32767;
+    }
+
+    const mp3encoder = new lamejs.Mp3Encoder(1, audioContext.sampleRate, 128);
+    const mp3Data = [];
+    const sampleBlockSize = 1152;
+
+    for (let i = 0; i < wavData.length; i += sampleBlockSize) {
+      const sampleChunk = wavData.subarray(i, i + sampleBlockSize);
+      const mp3buf = mp3encoder.encodeBuffer(sampleChunk);
+      if (mp3buf.length > 0) mp3Data.push(new Int8Array(mp3buf));
+    }
+
+    const endBuf = mp3encoder.flush();
+    if (endBuf.length > 0) mp3Data.push(new Int8Array(endBuf));
+
+    // Create MP3 Blob and download
+    const mp3Blob = new Blob(mp3Data, { type: "audio/mp3" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(mp3Blob);
+    link.download = "beatPattern.mp3";
+    link.click();
+  });
+}
+
+
 
 window.onload = loadBeat;
