@@ -30,10 +30,10 @@ With Music Creator, users can:
 ## 📸 Screenshots
 
 ### Main Interface
-![Main Interface](https://user-images.githubusercontent.com/your-image-link-here)
+![Main Interface](Active.png)
 
 ### Active Beat Grid
-![Active Beat Grid](https://user-images.githubusercontent.com/your-image-link-here)
+![Active Beat Grid](Main.png)
 
 ## 💻 Installation & Setup
 1. Clone the repository:
