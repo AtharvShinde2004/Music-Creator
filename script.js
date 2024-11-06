@@ -1,83 +1,71 @@
-// Define available instruments using Tone.js
-const instruments = {
-  Kick: new Tone.MembraneSynth().toDestination(),
-  Snare: new Tone.NoiseSynth({ envelope: { sustain: 0.1 } }).toDestination(),
-  HiHat: new Tone.MetalSynth({ resonance: 4000, volume: -10 }).toDestination(),
-  Clap: new Tone.MembraneSynth({ pitchDecay: 0.05, volume: -5 }).toDestination(),
-  Bass: new Tone.FMSynth({ modulationIndex: 12, volume: -8 }).toDestination(),
+// script.js
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const tempoInput = document.getElementById("tempo");
+const instrumentSelect = document.getElementById("instrument");
+const beatGrid = document.getElementById("beatGrid");
+
+// Create beat grid (16 beats, 4 rows for each instrument)
+for (let i = 0; i < 64; i++) {
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  beatGrid.appendChild(checkbox);
+}
+
+// Function to play sound
+function playSound(frequency, time, duration) {
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+
+  osc.frequency.value = frequency;
+  osc.type = "sine";
+  gain.gain.setValueAtTime(0.5, time);
+  gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
+
+  osc.start(time);
+  osc.stop(time + duration);
+}
+
+// Map instruments to frequencies
+const instrumentFrequencies = {
+  kick: 150,
+  snare: 300,
+  hiHat: 600,
+  synth: 800
 };
 
-// State to track the added instruments and current step
-const addedInstruments = [];
-let currentStep = 0;
+// Function to play beat
+function playBeat() {
+  const tempo = parseInt(tempoInput.value);
+  const beatDuration = 60 / tempo / 4;
+  const checkboxes = Array.from(beatGrid.children);
 
-// Set up Tone.js transport properties
-const bpm = 120;
-Tone.Transport.bpm.value = bpm;
-Tone.Transport.loop = true;
-Tone.Transport.loopEnd = '1m';
-
-// Function to add an instrument row
-function addInstrument() {
-  const instrumentName = document.getElementById('instrument').value;
-
-  // Prevent duplicate instrument addition
-  if (addedInstruments.includes(instrumentName)) {
-    alert(`${instrumentName} is already added.`);
-    return;
-  }
-
-  // Mark the instrument as added
-  addedInstruments.push(instrumentName);
-
-  // Create a new row for the instrument in the beat grid
-  const beatGrid = document.getElementById('beatGrid');
-  const row = document.createElement('div');
-  row.classList.add('instrument-row');
-
-  // Label for the instrument
-  const label = document.createElement('label');
-  label.innerText = instrumentName;
-  row.appendChild(label);
-
-  // Create 16 checkboxes for the beats
-  for (let i = 0; i < 16; i++) {
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'beat';
-    checkbox.dataset.instrument = instrumentName;
-    checkbox.dataset.step = i;
-    row.appendChild(checkbox);
-  }
-
-  // Append the row to the beat grid
-  beatGrid.appendChild(row);
-}
-
-// Function to play the current step, activating any instruments whose checkboxes are checked
-function playStep(time) {
-  const step = currentStep % 16;
-
-  document.querySelectorAll(".beat").forEach((checkbox) => {
-    if (parseInt(checkbox.dataset.step) === step && checkbox.checked) {
-      const instrument = instruments[checkbox.dataset.instrument];
-      if (instrument.triggerAttackRelease) {
-        instrument.triggerAttackRelease("C2", "8n", time);
-      }
+  checkboxes.forEach((checkbox, index) => {
+    if (checkbox.checked) {
+      const instrument = instrumentSelect.value;
+      const frequency = instrumentFrequencies[instrument];
+      const time = audioContext.currentTime + (index % 16) * beatDuration;
+      playSound(frequency, time, beatDuration * 0.9);
     }
   });
-
-  currentStep++;
 }
 
-// Initialize playback controls
-function initializeControls() {
-  document.getElementById("playButton").onclick = () => Tone.Transport.start();
-  document.getElementById("stopButton").onclick = () => Tone.Transport.stop();
-
-  // Schedule the playStep function to trigger every sixteenth note
-  Tone.Transport.scheduleRepeat((time) => playStep(time), "16n");
+// Function to save beat
+function saveBeat() {
+  const beatPattern = Array.from(beatGrid.children).map(checkbox => checkbox.checked);
+  localStorage.setItem("savedBeat", JSON.stringify(beatPattern));
+  alert("Beat saved!");
 }
 
-// Initialize controls on page load
-initializeControls();
+// Function to load saved beat
+function loadBeat() {
+  const savedBeat = JSON.parse(localStorage.getItem("savedBeat"));
+  if (savedBeat) {
+    Array.from(beatGrid.children).forEach((checkbox, index) => {
+      checkbox.checked = savedBeat[index];
+    });
+  }
+}
+
+window.onload = loadBeat;
