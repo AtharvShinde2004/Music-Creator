@@ -30,10 +30,10 @@ With Music Creator, users can:
 ## 📸 Screenshots
 
 ### Main Interface
-![Main Interface](Active.png)
+![Main Interface](Main.png)
 
 ### Active Beat Grid
-![Active Beat Grid](Main.png)
+![Active Beat Grid](Active.png)
 
 ## 💻 Installation & Setup
 1. Clone the repository:
@@ -90,9 +90,8 @@ This project is licensed under the MIT License. See `LICENSE` for more details.
 ## 🌐 Connect
 For questions, feedback, or suggestions, feel free to reach out:
 
-- **LinkedIn**: [Your LinkedIn](#)
-- **Twitter**: [Your Twitter](#)
-- **Email**: [Your Email](#)
+- **LinkedIn**: [LinkedIn](https://www.linkedin.com/in/atharvshinde212022/)
+- **Email**: [Email](Shindeatharv576@gmail.com)
 
 ---
 
