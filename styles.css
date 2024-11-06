@@ -1,4 +1,3 @@
-/* Reset and basic styles */
 * {
   margin: 0;
   padding: 0;
@@ -16,10 +15,8 @@ body {
   padding: 20px;
 }
 
-/* Header styling */
 header {
   text-align: center;
-  margin-top: 20px;
   padding: 20px;
   background-color: #28293d;
   width: 100%;
@@ -35,7 +32,6 @@ header p {
   color: #bfbfbf;
 }
 
-/* Main Content */
 main {
   width: 100%;
   max-width: 800px;
@@ -46,7 +42,6 @@ main {
   gap: 20px;
 }
 
-/* Responsive Control Panel */
 #controls {
   display: flex;
   flex-wrap: wrap;
@@ -62,14 +57,11 @@ main {
   color: #cfcfcf;
 }
 
-#controls select,
-#controls input,
 #controls button {
   font-size: 1rem;
-  padding: 8px;
+  padding: 8px 12px;
   border: none;
   border-radius: 5px;
-  outline: none;
   cursor: pointer;
   background-color: #46466a;
   color: #f1f1f1;
@@ -80,7 +72,6 @@ main {
   background-color: #ff7a59;
 }
 
-/* Responsive Beat Grid */
 #beatGrid {
   display: grid;
   grid-template-columns: repeat(16, 1fr);
@@ -102,7 +93,6 @@ main {
   background-color: #ff7a59;
 }
 
-/* Footer styling */
 footer {
   margin-top: 20px;
   padding: 10px;
@@ -112,22 +102,12 @@ footer {
   color: #bfbfbf;
 }
 
-footer p {
-  font-size: 0.9rem;
-}
-
-/* Button animation */
-#controls button:active {
-  transform: scale(0.95);
-}
-
-/* Responsive Design */
 @media (max-width: 600px) {
   header h1 {
     font-size: 2rem;
   }
 
   #beatGrid {
-    grid-template-columns: repeat(8, 1fr); /* Stack into 8 columns on small screens */
+    grid-template-columns: repeat(8, 1fr);
   }
 }
