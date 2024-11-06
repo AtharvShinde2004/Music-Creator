@@ -11,7 +11,6 @@ for (let i = 0; i < 64; i++) {
   beatGrid.appendChild(checkbox);
 }
 
-// Function to play sound
 function playSound(frequency, time, duration) {
   const osc = audioContext.createOscillator();
   const gain = audioContext.createGain();
@@ -27,7 +26,6 @@ function playSound(frequency, time, duration) {
   osc.stop(time + duration);
 }
 
-// Map instruments to frequencies
 const instrumentFrequencies = {
   kick: 150,
   snare: 300,
@@ -35,30 +33,40 @@ const instrumentFrequencies = {
   synth: 800
 };
 
-// Function to play beat
-function playBeat() {
+async function playBeat() {
   const tempo = parseInt(tempoInput.value);
   const beatDuration = 60 / tempo / 4;
   const checkboxes = Array.from(beatGrid.children);
 
-  checkboxes.forEach((checkbox, index) => {
-    if (checkbox.checked) {
-      const instrument = instrumentSelect.value;
-      const frequency = instrumentFrequencies[instrument];
-      const time = audioContext.currentTime + (index % 16) * beatDuration;
-      playSound(frequency, time, beatDuration * 0.9);
-    }
-  });
+  for (let beat = 0; beat < 16; beat++) {
+    checkboxes.forEach((checkbox, index) => {
+      const row = Math.floor(index / 16);
+      if (index % 16 === beat && checkbox.checked) {
+        const instrument = instrumentSelect.value;
+        const frequency = instrumentFrequencies[instrument];
+        const time = audioContext.currentTime;
+        
+        playSound(frequency, time, beatDuration * 0.9);
+        
+        // Add active class to animate the current beat
+        checkbox.classList.add("active");
+        
+        // Remove active class after the beat duration
+        setTimeout(() => checkbox.classList.remove("active"), beatDuration * 1000);
+      }
+    });
+
+    // Wait for the duration of each beat
+    await new Promise(resolve => setTimeout(resolve, beatDuration * 1000));
+  }
 }
 
-// Function to save beat
 function saveBeat() {
   const beatPattern = Array.from(beatGrid.children).map(checkbox => checkbox.checked);
   localStorage.setItem("savedBeat", JSON.stringify(beatPattern));
   alert("Beat saved!");
 }
 
-// Function to load saved beat
 function loadBeat() {
   const savedBeat = JSON.parse(localStorage.getItem("savedBeat"));
   if (savedBeat) {
